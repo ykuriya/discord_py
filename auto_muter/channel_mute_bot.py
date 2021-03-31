@@ -10,7 +10,7 @@ from discord.ext import commands
 TOKEN = "BOT_TOKEN"
 
 # MEMO: muter channel id
-muter_channel_id = 00000000000000000
+muter_channel_ids = [00000000000000000]
 
 client = commands.Bot(command_prefix='.')
 
@@ -23,13 +23,12 @@ async def on_ready():
 
 @client.event
 async def on_voice_state_update(member, before, after):
-    global muter_channel_id
+    global muter_channel_ids
     print('on_voice_state_update')
     if before.channel != after.channel:
-        if after.channel != None and after.channel.id == muter_channel_id:
+        if after.channel != None and after.channel.id in muter_channel_ids:
             await member.edit(mute=True)
-
-        if before.channel != None and before.channel.id == muter_channel_id:
+        elif before.channel != None and before.channel.id in muter_channel_ids:
             await member.edit(mute=False)
 
 client.run(TOKEN)
